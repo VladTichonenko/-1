@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест: Методы создания эффективной команды</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #eef6f8;
+            height: 100vh;
+        }
+        .card {
+            width: 300px;
+            background-color: white;
+            border: 2px solid #00bcd4;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .btn {
+            display: inline-block;
+            width: 100px;
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn.yes {
+            background-color: #00bcd4;
+            color: white;
+        }
+        .btn.no {
+            background-color: #f44336;
+            color: white;
+        }
+        .result {
+            font-size: 18px;
+            color: #333;
+            text-align: center;
+        }
+        .btn-home {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #00bcd4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="question" id="question">Загрузка...</div>
+        <button class="btn yes" onclick="answer(true)">Да</button>
+        <button class="btn no" onclick="answer(false)">Нет</button>
+    </div>
+    <div class="result" id="result" style="display: none;">
+        Результат теста
+    </div>
+    <button class="btn-home" id="home-btn" style="display: none;" onclick="goHome()">На главную</button>
+
+    <script>
+        const questions = [
+            "Регулярные тренинги могут повысить эффективность команды?",
+            "Участие команды в принятии решений улучшает ее мотивацию?",
+            "Команда должна иметь возможность выражать свои идеи и опасения?",
+            "Установление четкого расписания помогает команде управлять временем?",
+            "Команда не должна делиться своими успехами и неудачами?",
+            "Лидер команды должен уметь разрешать конфликты?",
+            "Члены команды должны иметь возможность развиваться профессионально?",
+            "Эффективная команда всегда работает на одном проекте?",
+            "Положительная атмосфера в команде способствует ее успеху?",
+            "Важно учитывать мнения всех членов команды при разработке стратегии?",
+            "Четкое распределение ролей в команде не обязательно?",
+            "Система поощрений может помочь в создании эффективной команды?",
+            "Команда должна регулярно оценивать свою работу?",
+            "Члены команды должны быть независимыми друг от друга?",
+            "Эффективные команды не нуждаются в постоянной поддержке лидера?"
+        ];
+        const correctAnswers = [
+            true, true, true, true, false,
+            true, true, false, true, true,
+            false, true, true, false, false
+        ];
+        let currentQuestion = 0;
+        let score = 0;
+
+        function answer(isYes) {
+            if (currentQuestion < questions.length) {
+                if (isYes === correctAnswers[currentQuestion]) score++;
+                currentQuestion++;
+                if (currentQuestion < questions.length) {
+                    document.getElementById("question").textContent = questions[currentQuestion];
+                } else {
+                    showResult();
+                }
+            }
+        }
+
+        function showResult() {
+            const resultDiv = document.getElementById("result");
+            const homeBtn = document.getElementById("home-btn");
+            const card = document.querySelector(".card");
+            card.style.display = "none";
+            resultDiv.style.display = "block";
+            homeBtn.style.display = "block";
+
+            const total = questions.length;
+            const percentage = (score / total) * 100;
+
+            if (percentage < 50) {
+                resultDiv.textContent = "Низкий уровень понимания: Ваши знания о методах создания эффективной команды находятся на низком уровне.\n" +
+                    "Вы не понимаете, как применять различные подходы и стратегии для формирования и управления командой.\n" +
+                    "Рекомендуется изучить основные техники работы с командой, такие как методы коммуникации, разрешения конфликтов и повышения мотивации.";
+            } else if (percentage < 80) {
+                resultDiv.textContent = "Средний уровень понимания: Вы обладаете базовыми знаниями о методах создания команды, но есть пробелы в понимании их практического применения.\n" +
+                    "Вы осознаете некоторые важные моменты, но вам стоит углубить свои знания о том, как вовлекать членов команды в процесс принятия решений и улучшать командную динамику.\n" +
+                    "Рекомендуется активно участвовать в обучении и обмене опытом с коллегами.";
+            } else {
+                resultDiv.textContent = "Высокий уровень понимания: Вы демонстрируете хорошие знания о методах создания эффективной команды.\n" +
+                    "Вы понимаете, как важно вовлекать членов команды, устанавливать четкие роли и поддерживать положительную атмосферу.\n" +
+                    "Ваши навыки могут существенно повысить эффективность работы команды и её сплоченность.\n" +
+                    "Рекомендуется продолжать развивать свои знания и делиться опытом с коллегами.";
+            }
+        }
+
+        function goHome() {
+            window.location.href = "index.html";
+        }
+
+        document.getElementById("question").textContent = questions[currentQuestion];
+    </script>
+</body>
+</html>

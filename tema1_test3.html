@@ -1,0 +1,176 @@
+
+<!DOCTYPE html> 
+<html lang="ru"> 
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>Тест: Делегирование задач и командное принятие решений</title> 
+    <style> 
+        body { 
+            margin: 0; 
+            font-family: Arial, sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            background-color: #f0f8ff; 
+            height: 100vh; 
+        } 
+        .card { 
+            width: 300px; 
+            background-color: white; 
+            border: 2px solid #1e90ff; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+            padding: 20px; 
+            text-align: center; 
+            margin-bottom: 20px; 
+        } 
+        .question { 
+            font-size: 18px; 
+            margin-bottom: 20px; 
+            color: #333; 
+        } 
+        .btn { 
+            display: block; 
+            width: 100%; 
+            padding: 10px; 
+            margin: 5px 0; 
+            font-size: 16px; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+        } 
+        .btn.correct { 
+            background-color: #1e90ff; 
+            color: white; 
+        } 
+        .btn.incorrect { 
+            background-color: #ff6347; 
+            color: white; 
+        } 
+        .result { 
+            font-size: 18px; 
+            color: #333; 
+            text-align: center; 
+            display: none; 
+        } 
+        .btn-home { 
+            margin-top: 20px; 
+            padding: 10px 20px; 
+            background-color: #1e90ff; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            font-size: 16px; 
+            cursor: pointer; 
+        } 
+    </style> 
+</head> 
+<body> 
+    <div class="card"> 
+        <div class="question" id="question">Загрузка...</div> 
+        <button class="btn" onclick="answer(1)">Передача ответственности за выполнение задачи, оставаясь при этомresponsible за результат</button> 
+        <button class="btn" onclick="answer(0)">Передача всех задач подчиненному</button> 
+        <button class="btn" onclick="answer(0)">Принятие всех решений самостоятельно</button> 
+    </div> 
+    <div class="result" id="result"></div> 
+    <button class="btn-home" id="home-btn" style="display: none;" onclick="goHome()">На главную</button> 
+ 
+    <script> 
+        const questions = [ 
+            "Какое из следующих утверждений лучше других описывает суть делегирования полномочий?", 
+            "Что важно учитывать при делегировании задач?", 
+            "Какой из следующих подходов наиболее эффективен при принятии решений в команде?", 
+            "Ситуация: Один из ваших сотрудников просит вас помочь с решением, которое он должен принять. Как вы поступите?", 
+            "Какой из следующих факторов не следует учитывать при делегировании?", 
+            "Ситуация: Ваш проект требует быстрого решения, но вы не уверены, как поступить. Что вы сделаете?", 
+            "Какой стиль управления наиболее эффективен для делегирования полномочий?", 
+            "Ситуация: Вы заметили, что один из ваших сотрудников не справляется с задачами. Как вы поступите?", 
+            "Что может быть результатом недостаточного делегирования полномочий?", 
+            "Ситуация: Вы хотите улучшить принятие решений в команде. Какой шаг будет самым эффективным?", 
+            "Какое из следующих утверждений о делегировании верно?", 
+            "Ситуация: Вы получили несколько идей от команды, но не все из них реализуемы. Как вы отреагируете?", 
+            "Какой из следующих подходов помогает развивать навыки принятия решений у сотрудников?", 
+            "Ситуация: У вас есть несколько важных задач, но времени на их выполнение недостаточно. Что вы сделаете?", 
+            "Какое из следующих утверждений о делегировании является неверным?" 
+        ]; 
+         
+        constcorr
+
+ectAnswers = [ 
+            1, 0, 1, 2, 2, 1, 1, 2, 1, 0, 
+            0, 1, 1, 2, 0 
+        ]; 
+         
+        const answerTexts = [ 
+            [ 
+                ["Передача ответственности за выполнение задачи, оставаясь при этомresponsible за результат", "Передача всех задач подчиненному", "Принятие всех решений самостоятельно"], 
+                ["Уровень подготовки и опыт подчиненного", "Личную симпатию к сотруднику", "Наличие времени и ресурсов для выполнения задачи"], 
+                ["Принять решение самостоятельно, чтобы сэкономить время", "Обсудить решение с командой и учесть их мнения", "Попросить одного человека принять решение"], 
+                ["Примите решение сами, чтобы избежать ошибок", "Поручите ему принять решение и дадите ему время на размышление", "Обсудите с ним возможные варианты и позволите сделать выбор"], 
+                ["Сложность задачи", "Способности и мотивацию подчиненного", "Личное мнение руководителя о сотруднике"], 
+                ["Примете решение сами, чтобы не терять время", "Попросите команду предложить варианты решений", "Отложите решение до следующей встречи"], 
+                ["Авторитарный", "Партнерский", "Либеральный"], 
+                ["Возьмете его задачи на себя", "Переведете его на другую должность", "Проведете беседу, чтобы понять причины"], 
+                ["Повышение продуктивности команды", "Перегрузка руководителя и снижение мотивации команды", "Улучшение взаимодействия в команде"], 
+                ["Проводить регулярные собрания для обсуждения решений", "Делегировать все решения одному сотруднику", "Принять все решения самостоятельно"], 
+                ["Делегирование означает передачу ответственности", "Делегирование всегда приводит к ошибкам", "Делегирование уменьшает контроль"], 
+                ["Отклоните все идеи", "Обсудите с командой, какие идеи стоит развивать", "Выберите одну и проигнорируете остальные"], 
+                ["Постоянный контроль за выполнением задач", "Обсуждение ошибок и поиск решений вместе", "Принуждение к выполнению задач строго по инструкции"], 
+                ["Выполните все задачи самостоятельно", "Попросите руководство о помощи", "Делегируете задачи наиболее подходящим сотрудникам"], 
+                ["Делегирование всегда приводит к высоким рискам", "Делегирование помогает развивать команду", "Делегирование позволяет сосредоточиться на более важных задачах"] 
+            ] 
+        ]; 
+         
+        let currentQuestion = 0; 
+        let score = 0; 
+ 
+        function answer(selectedIndex) { 
+            if (selectedIndex === correctAnswers[currentQuestion]) { 
+                score++; 
+            } 
+            currentQuestion++; 
+            if (currentQuestion < questions.length) { 
+                document.getElementById("question").textContent = questions[currentQuestion]; 
+                updateButtons(); 
+            } else { 
+                showResult(); 
+            } 
+        } 
+ 
+        function updateButtons() { 
+            const buttons = document.querySelectorAll('.btn'); 
+            buttons.forEach((btn, index) => { 
+                btn.textContent = answerTexts[0][currentQuestion][index]; 
+            }); 
+        } 
+ 
+        function showResult() { 
+            const resultDiv = document.getElementById("result"); 
+            const homeBtn = document.getElementById("home-btn"); 
+            const card = document.querySelector(".card"); 
+            card.style.display = "none"; 
+            resultDiv.style.display = "block"; 
+            homeBtn.style.display = "block"; 
+ 
+            if (score <= 5) { 
+                resultDiv.textContent = "Низкий уровень делегирования: Вы продемонстрировали ограниченные знания о делегировании и принятии решений."; 
+            } else if (score <= 10) { 
+                resultDiv.textContent = "Средний уровень делегирования: У вас есть базовые знания о делегировании, но есть области для улучшения."; 
+            } else if (score <= 13) { 
+                resultDiv.textContent = "Высокий уровень делегирования: Отличные навыки в делегировании и принятии решений!"; 
+            } else { 
+                resultDiv.textContent = "Эксперт в делегировании: Вы обладаете глубоким пониманием и навыками в области делегирования и принятия решений!"; 
+            } 
+        } 
+ 
+        function goHome() { 
+            window.location.href = "index.html"; 
+        } 
+ 
+        document.getElementById("question").textContent = questions[currentQuestion]; 
+        updateButtons(); 
+    </script> 
+</body> 
+</html>

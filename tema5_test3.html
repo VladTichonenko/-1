@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест 3: Практические аспекты внедрения корпоративной социальной ответственности</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f8ff;
+            height: 100vh;
+        }
+        .card {
+            width: 300px;
+            background-color: white;
+            border: 2px solid #1e90ff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .btn {
+            display: inline-block;
+            width: 100px;
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn.yes {
+            background-color: #1e90ff;
+            color: white;
+        }
+        .btn.no {
+            background-color: #ff6347;
+            color: white;
+        }
+        .result {
+            font-size: 18px;
+            color: #333;
+            text-align: center;
+        }
+        .btn-home {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #1e90ff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="question" id="question">Загрузка...</div>
+        <button class="btn yes" onclick="answer(true)">Да</button>
+        <button class="btn no" onclick="answer(false)">Нет</button>
+    </div>
+    <div class="result" id="result" style="display: none;">
+        Результат теста
+    </div>
+    <button class="btn-home" id="home-btn" style="display: none;" onclick="goHome()">На главную</button>
+
+    <script>
+        const questions = [
+            "Для эффективного внедрения КСО, компания должна активно участвовать в социальных проектах.",
+            "Внедрение КСО требует значительных инвестиций, но это оправдано долгосрочной выгодой.",
+            "Системы отчетности о КСО должны быть прозрачными и доступными для общественности.",
+            "КСО ограничивается только деятельностью в области экологии.",
+            "Все компании должны внедрять элементы КСО независимо от их размера."
+        ];
+        const correctAnswers = [
+            true, true, true, false, true
+        ];
+        let currentQuestion = 0;
+        let score = 0;
+
+        function answer(isYes) {
+            if (currentQuestion < questions.length) {
+                if (isYes === correctAnswers[currentQuestion]) score++;
+                currentQuestion++;
+                if (currentQuestion < questions.length) {
+                    document.getElementById("question").textContent = questions[currentQuestion];
+                } else {
+                    showResult();
+                }
+            }
+        }
+
+        function showResult() {
+            const resultDiv = document.getElementById("result");
+            const homeBtn = document.getElementById("home-btn");
+            const card = document.querySelector(".card");
+            card.style.display = "none";
+            resultDiv.style.display = "block";
+            homeBtn.style.display = "block";
+
+            const total = questions.length;
+            const percentage = (score / total) * 100;
+
+            if (percentage < 50) {
+                resultDiv.textContent = `Низкий уровень: ${score}/${total} правильных. Это может указывать на необходимость более глубокого изучения темы.`;
+            } else if (percentage < 80) {
+                resultDiv.textContent = `Средний уровень: ${score}/${total} правильных. Вы обладаете базовыми знаниями, но есть пробелы в понимании.`;
+            } else {
+                resultDiv.textContent = `Высокий уровень: ${score}/${total} правильных. Вы хорошо разбираетесь в теме!`;
+            }
+        }
+
+        function goHome() {
+            window.location.href = "index.html";
+        }
+
+        document.getElementById("question").textContent = questions[currentQuestion];
+    </script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+
+<!DOCTYPE html> 
+<html lang="ru"> 
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>Тест: Делегирование полномочий</title> 
+    <style> 
+        body { 
+            margin: 0; 
+            font-family: Arial, sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            background-color: #f0f8ff; 
+            height: 100vh; 
+        } 
+        .card { 
+            width: 300px; 
+            background-color: white; 
+            border: 2px solid #1e90ff; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+            padding: 20px; 
+            text-align: center; 
+            margin-bottom: 20px; 
+        } 
+        .question { 
+            font-size: 18px; 
+            margin-bottom: 20px; 
+            color: #333; 
+        } 
+        .btn { 
+            display: block; 
+            width: 100%; 
+            padding: 10px; 
+            margin: 5px 0; 
+            font-size: 16px; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+        } 
+        .btn.correct { 
+            background-color: #1e90ff; 
+            color: white; 
+        } 
+        .btn.incorrect { 
+            background-color: #ff6347; 
+            color: white; 
+        } 
+        .result { 
+            font-size: 18px; 
+            color: #333; 
+            text-align: center; 
+            display: none; 
+        } 
+        .btn-home { 
+            margin-top: 20px; 
+            padding: 10px 20px; 
+            background-color: #1e90ff; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            font-size: 16px; 
+            cursor: pointer; 
+        } 
+    </style> 
+</head> 
+<body> 
+    <div class="card"> 
+        <div class="question" id="question">Загрузка...</div> 
+        <button class="btn" onclick="answer(false)">Это помогает вам переложить свою работу на кого-то другого</button> 
+        <button class="btn" onclick="answer(false)">Это инструмент, который поможет вам избавиться от неприятных задач</button> 
+        <button class="btn" onclick="answer(true)">Это инструмент, который поможет вам достичь большего и одновременно развить ваших сотрудников</button> 
+        <button class="btn" onclick="answer(false)">Это позволяет вам наказать умников таким объемом работы</button> 
+    </div> 
+    <div class="result" id="result"></div> 
+    <button class="btn-home" id="home-btn" style="display: none;" onclick="goHome()">На главную</button> 
+ 
+    <script> 
+        const questions = [ 
+            "Почему делегирование является важным инструментом управления?", 
+            "Согласны ли вы со следующим утверждением: \"Менеджер, который не делегирует полномочия, не управляет\"?", 
+            "Ваши знания управления являются важным фактором при делегировании полномочий другим.", 
+            "Какой из следующих вариантов лучше всего описывает этап делегирования «Контроль/Последующий мониторинг»?", 
+            "Первый шаг в делегировании называется «Указания». На этом этапе менеджер", 
+            "Согласны ли вы со следующим утверждением: \"Менеджеры должны учитывать 5 уровней полномочий при делегировании задачи подчиненному\"?", 
+            "Какой ключевой элемент следует учитывать при сознательном делегировании?", 
+            "Какой ключевой элемент следует учитывать при доминирующем делегировании?", 
+            "Сопротивление сотрудников часто встречается, когда вы делегируете задачу.", 
+            "Заключительный этап в процессе делегирования полномочий — «Поддержка, признание и поощрения»." 
+        ]; 
+         
+        const correctAnswers = [ 
+            2, 0, 1, 2, 1, 1, 3, 1, 0, 2 
+        ]; 
+         
+        let currentQuestion = 0; 
+        let score = 0; 
+ 
+        function answer(selectedIndex) { 
+            if (selectedIndex === correctAnswers[currentQuestion]) { 
+                score++; 
+            } 
+            currentQuestion++;
+if (currentQuestion < questions.length) { 
+                document.getElementById("question").textContent = questions[currentQuestion]; 
+                updateButtons(); 
+            } else { 
+                showResult(); 
+            } 
+        } 
+ 
+        function updateButtons() { 
+            const buttons = document.querySelectorAll('.btn'); 
+            buttons.forEach((btn, index) => { 
+                // Здесь можно обновить текст кнопок в зависимости от вопроса 
+                btn.textContent = getAnswerText(currentQuestion, index); 
+            }); 
+        } 
+ 
+        function getAnswerText(questionIndex, btnIndex) { 
+            const answerOptions = [ 
+                ["Это помогает вам переложить свою работу на кого-то другого", "Это инструмент, который поможет вам избавиться от неприятных задач", "Это инструмент, который поможет вам достичь большего и одновременно развить ваших сотрудников", "Это позволяет вам наказать умников таким объемом работы"], 
+                ["Да", "Нет"], 
+                ["Да", "Нет"], 
+                ["Моральная поддержка", "Как ваш начальник, я имею право контролировать каждый ваш шаг", "Я предоставлю вам график основных этапов и мы будем проводить «проверки», чтобы я мог оценить ваш прогресс", ""], 
+                ["Предоставляет пошаговый список действий", "Дает четкое представление о том, как выглядит завершенная задача", "Описывает негативные последствия", "Определяет уровень полномочий"], 
+                ["Да", "Нет"], 
+                ["Предоставление времени", "Минимум информации", "Подробности о наилучшем способе выполнения задачи", "Подробная информация об ожидаемых результатах"], 
+                ["Выражение поддержки", "Корректирование плана", "Выдвижение требований", "Связь с сотрудником только после выполнения работы"], 
+                ["Спросите о страхе", "Скажите, что он бездельник", "Согласитесь и отмените задание"], 
+                ["Менеджер лучше всех знает", "Учитывать потребности отдела", "Учитывать стиль работы сотрудника", "Не чествовать никого"] 
+            ]; 
+            return answerOptions[questionIndex][btnIndex]; 
+        } 
+ 
+        function showResult() { 
+            const resultDiv = document.getElementById("result"); 
+            const homeBtn = document.getElementById("home-btn"); 
+            const card = document.querySelector(".card"); 
+            card.style.display = "none"; 
+            resultDiv.style.display = "block"; 
+            homeBtn.style.display = "block"; 
+ 
+            if (score < 4) { 
+                resultDiv.textContent = "Меньше 4 баллов: Вы отлично делегируете полномочия."; 
+            } else if (score >= 4 && score <= 7) { 
+                resultDiv.textContent = "От 4 до 7 баллов: Вы неплохо делегируете полномочия."; 
+            } else { 
+                resultDiv.textContent = "Больше 7 баллов: Делегирование является для вас серьезной проблемой."; 
+            } 
+        } 
+ 
+        function goHome() { 
+            window.location.href = "index.html"; 
+        } 
+ 
+        document.getElementById("question").textContent = questions[currentQuestion]; 
+        updateButtons(); 
+    </script> 
+</body> 
+</html>

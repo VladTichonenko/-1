@@ -1,0 +1,177 @@
+
+<!DOCTYPE html> 
+<html lang="ru"> 
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>Тест: Компетенции в области отбора персонала</title> 
+    <style> 
+        body { 
+            margin: 0; 
+            font-family: Arial, sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            background-color: #f0f8ff; 
+            height: 100vh; 
+        } 
+        .card { 
+            width: 300px; 
+            background-color: white; 
+            border: 2px solid #1e90ff; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+            padding: 20px; 
+            text-align: center; 
+            margin-bottom: 20px; 
+        } 
+        .question { 
+            font-size: 18px; 
+            margin-bottom: 20px; 
+            color: #333; 
+        } 
+        .btn { 
+            display: block; 
+            width: 100%; 
+            padding: 10px; 
+            margin: 5px 0; 
+            font-size: 16px; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+        } 
+        .btn.correct { 
+            background-color: #1e90ff; 
+            color: white; 
+        } 
+        .btn.incorrect { 
+            background-color: #ff6347; 
+            color: white; 
+        } 
+        .result { 
+            font-size: 18px; 
+            color: #333; 
+            text-align: center; 
+            display: none; 
+        } 
+        .btn-home { 
+            margin-top: 20px; 
+            padding: 10px 20px; 
+            background-color: #1e90ff; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            font-size: 16px; 
+            cursor: pointer; 
+        } 
+    </style> 
+</head> 
+<body> 
+    <div class="card"> 
+        <div class="question" id="question">Загрузка...</div> 
+        <button class="btn" onclick="answer(2)">Резюме</button> 
+        <button class="btn" onclick="answer(1)">Практическое задание</button> 
+        <button class="btn" onclick="answer(0)">Оценка поведения кандидатов в реальных ситуациях</button> 
+        <button class="btn" onclick="answer(0)">Культурная совместимость</button> 
+    </div> 
+    <div class="result" id="result"></div> 
+    <button class="btn-home" id="home-btn" style="display: none;" onclick="goHome()">На главную</button> 
+ 
+    <script> 
+        const questions = [ 
+            "Какой документ обычно первым рассматривает рекрутер?", 
+            "Какой из следующих методов лучше всего подходит для оценки технических навыков кандидата?", 
+            "Что такое \"методы отбора по поведению\"?", 
+            "Какой из факторов может влиять на решение о найме?", 
+            "Что такое \"профилирование кандидата\"?", 
+            "Какой метод может помочь в предотвращении предвзятости при отборе?", 
+            "Что такое \"оценка на 360 градусов\"?", 
+            "Какой из следующих факторов не должен влиять на отбор кандидатов?", 
+            "Какой из методов отбора считается наиболее эффективным для выявления \"мягких навыков\"?", 
+            "Что такое \"функциональное резюме\"?", 
+            "Ситуация: Вы провели собеседование с кандидатом, который показал отличные результаты на тестировании, но его резюме выглядит неполно. Какое ваше действие?", 
+            "Ситуация: Кандидат на должность менеджера по продажам не смог ответить на вопрос о его предыдущем опыте работы. Как вы поступите?", 
+            "Ситуация: После собеседования вы получили негативные отзывы от предыдущего работодателя кандидата. Какое решение вы примете?", 
+            "Ситуация: В процессе обсуждения с кандидатом вы заметили, что его ценности не совпадают с корпоративной культурой вашей компании. Как вы поступите?", 
+            "Вы заметили, что один из ваших коллег по рекрутингу проявляет явную предвзятость к кандидатам определенного пола. Как вы отреагируете?" 
+        ];
+
+
+const correctAnswers = [ 
+            2, 1, 2, 1, 1, 3, 2, 3, 1, 2, 
+            1, 3, 2, 1, 1 
+        ]; 
+         
+        let currentQuestion = 0; 
+        let score = 0; 
+ 
+        function answer(selectedIndex) { 
+            if (selectedIndex === correctAnswers[currentQuestion]) { 
+                score++; 
+            } 
+            currentQuestion++; 
+            if (currentQuestion < questions.length) { 
+                document.getElementById("question").textContent = questions[currentQuestion]; 
+                updateButtons(); 
+            } else { 
+                showResult(); 
+            } 
+        } 
+ 
+        function updateButtons() { 
+            const buttons = document.querySelectorAll('.btn'); 
+            buttons.forEach((btn, index) => { 
+                // Обновление текста кнопок в зависимости от вопроса 
+                btn.textContent = getAnswerText(currentQuestion, index); 
+            }); 
+        } 
+ 
+        function getAnswerText(questionIndex, btnIndex) { 
+            const answerOptions = [ 
+                ["Рекомендации", "Портфолио", "Резюме"], 
+                ["Практическое задание", "Интервью", "Тест на IQ"], 
+                ["Оценка кандидатов на основе их резюме", "Оценка поведения кандидатов в реальных ситуациях", "Проверка знаний в области законодательства"], 
+                ["Местоположение кандидата", "Культурная совместимость", "Личные предпочтения рекрутера"], 
+                ["Создание идеального образа кандидата для конкретной позиции", "Составление резюме", "Оценка поведения сотрудника на текущей должности"], 
+                ["Использование только резюме", "Оценка по личной симпатии", "Стандартизированные интервью"], 
+                ["Оценка, основанная только на мнении руководства", "Оценка, включающая мнения коллег, подчиненных и руководителей", "Оценка, проводимая в виде тестирования"], 
+                ["Опыт работы", "Образование", "Пол кандидата"], 
+                ["Письменный тест", "Групповое интервью", "Проверка рекомендаций"], 
+                ["Резюме, сфокусированное на образовании", "Резюме, акцентирующее внимание на навыках и опыте", "Резюме, составленное в свободной форме"], 
+                ["Спросить кандидата о недостающей информации на интервью", "Отклонить кандидата из-за недостатка информации", "Принять решение на основе теста, игнорируя резюме"], 
+                ["Прекратите интервью немедленно", "Оцените его по личным качествам, игнорируя опыт", "Сделайте заметку и задайте дополнительные вопросы о его опыте"], 
+                ["Отклонить кандидата без объяснений", "Обсудить этот отзыв с кандидатом и выяснить детали", "Игнорировать отзывы, если кандидат понравился на интервью"], 
+                ["Сообщите кандидату об этом и объясните, почему это важно", "Примите кандидата, надеясь, что он адаптируется", "Отклоните кандидата без объяснения причин"], 
+                ["Проведете разговор с коллегой о необходимости объективности", "Проигнорируйте ситуацию, так как это не ваше дело", "Сообщите об этом руководству без обсуждения с коллегой"] 
+            ]; 
+            return answerOptions[questionIndex][btnIndex]; 
+        } 
+ 
+        function showResult() { 
+            const resultDiv = document.getElementById("result"); 
+            const homeBtn = document.getElementById("home-btn"); 
+            const card = document.querySelector(".card"); 
+            card.style.display = "none"; 
+            resultDiv.style.display = "block"; 
+            homeBtn.style.display = "block"; 
+ 
+            if (score <= 5) { 
+                resultDiv.textContent = "Низкий уровень знаний. Вы не знакомы с основными принципами отбора персонала."; 
+            } else if (score <= 10) { 
+                resultDiv.textContent = "Средний уровень знаний. У вас есть базовое понимание процесса отбора."; 
+            } else { 
+                resultDiv.textContent = "Высокий уровень знаний. Вы обладаете хорошими знаниями и пониманием методов отбора персонала."; 
+            } 
+        } 
+ 
+        function goHome() { 
+            window.location.href =
+"index.html"; 
+        } 
+ 
+        document.getElementById("question").textContent = questions[currentQuestion]; 
+        updateButtons(); 
+    </script> 
+</body> 
+</html>

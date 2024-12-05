@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест: Психология мотивации</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f8ff;
+            height: 100vh;
+        }
+        .card {
+            width: 300px;
+            background-color: white;
+            border: 2px solid #1e90ff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .btn {
+            display: inline-block;
+            width: 100px;
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn.yes {
+            background-color: #1e90ff;
+            color: white;
+        }
+        .btn.no {
+            background-color: #ff6347;
+            color: white;
+        }
+        .result {
+            font-size: 18px;
+            color: #333;
+            text-align: center;
+        }
+        .btn-home {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #1e90ff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="question" id="question">Загрузка...</div>
+        <button class="btn yes" onclick="answer(true)">Да</button>
+        <button class="btn no" onclick="answer(false)">Нет</button>
+    </div>
+    <div class="result" id="result" style="display: none;">
+        Результат теста
+    </div>
+    <button class="btn-home" id="home-btn" style="display: none;" onclick="goHome()">На главную</button>
+
+    <script>
+        const questions = [
+            "Мотивация всегда является внутренним процессом.",
+            "Потребности человека по Маслоу влияют на его мотивацию.",
+            "Долгосрочные цели менее важны, чем краткосрочные.",
+            "Персонализированные подходы к мотивации эффективнее.",
+            "Мотивация может изменяться со временем.",
+            "Стимулы должны быть одинаковыми для всех сотрудников.",
+            "Психологическая безопасность способствует высокой мотивации.",
+            "Конкуренция между сотрудниками не влияет на мотивацию.",
+            "Открытое общение с руководством повышает уровень доверия и мотивации.",
+            "Вознаграждение за выполнение задач должно быть немедленным.",
+            "Мотивация не может быть искусственно создана.",
+            "Удовлетворенность работой влияет на мотивацию.",
+            "Лидерство играет важную роль в мотивации.",
+            "Невозможность достижения целей не влияет на мотивацию.",
+            "Мотивация и производительность всегда связаны."
+        ];
+        const correctAnswers = [
+            false, true, false, true, true,
+            false, true, false, true, true,
+            false, true, true, false, true
+        ];
+        let currentQuestion = 0;
+        let score = 0;
+
+        function answer(isYes) {
+            if (currentQuestion < questions.length) {
+                if (isYes === correctAnswers[currentQuestion]) score++;
+                currentQuestion++;
+                if (currentQuestion < questions.length) {
+                    document.getElementById("question").textContent = questions[currentQuestion];
+                } else {
+                    showResult();
+                }
+            }
+        }
+
+        function showResult() {
+            const resultDiv = document.getElementById("result");
+            const homeBtn = document.getElementById("home-btn");
+            const card = document.querySelector(".card");
+            card.style.display = "none";
+            resultDiv.style.display = "block";
+            homeBtn.style.display = "block";
+
+            const total = questions.length;
+            const percentage = (score / total) * 100;
+
+            if (percentage < 50) {
+                resultDiv.textContent = "Низкий уровень: Рекомендуется изучить базовые концепции мотивации, такие как модель Маслоу.";
+            } else if (percentage < 80) {
+                resultDiv.textContent = "Средний уровень: Углубите знания о факторах мотивации и их взаимосвязи с производительностью.";
+            } else {
+                resultDiv.textContent = "Высокий уровень: Вы демонстрируете глубокое понимание психологии мотивации!";
+            }
+        }
+
+        function goHome() {
+            window.location.href = "index.html";
+        }
+
+        document.getElementById("question").textContent = questions[currentQuestion];
+    </script>
+</body>
+</html>

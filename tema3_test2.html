@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест: Проблемы адаптации сотрудников</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f8ff;
+            height: 100vh;
+        }
+        .card {
+            width: 300px;
+            background-color: white;
+            border: 2px solid #1e90ff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #1e90ff;
+            color: white;
+        }
+        .result {
+            font-size: 18px;
+            color: #333;
+            text-align: center;
+        }
+        .btn-home {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #1e90ff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="card" id="quiz-container">
+        <div class="question" id="question">Загрузка...</div>
+        <div class="options" id="options"></div>
+    </div>
+    <div class="result" id="result" style="display: none;">Результат теста</div>
+    <button class="btn-home" id="home-btn" style="display: none;" onclick="goHome()">На главную</button>
+
+    <script>
+        const questions = [
+            {
+                question: "Какой из следующих факторов может замедлить адаптацию?",
+                options: [
+                    "Непонимание корпоративных ценностей",
+                    "Поддержка со стороны команды",
+                    "Четкие инструкции"
+                ],
+                correct: 0
+            },
+            {
+                question: "Какой из методов может помочь в выявлении проблем адаптации?",
+                options: [
+                    "Анонимные опросы",
+                    "Общее собрание",
+                    "Индивидуальные беседы"
+                ],
+                correct: 0
+            },
+            {
+                question: "Какой аспект важен для профессиональной адаптации?",
+                options: [
+                    "Участие в социальных мероприятиях",
+                    "Понимание роли в команде",
+                    "Изучение истории компании"
+                ],
+                correct: 1
+            },
+            {
+                question: "Какой из следующих признаков может указывать на проблемы с адаптацией?",
+                options: [
+                    "Высокая мотивация",
+                    "Частые ошибки в работе",
+                    "Активное участие в жизни компании"
+                ],
+                correct: 1
+            },
+            {
+                question: "Какой из следующих методов облегчает процесс адаптации?",
+                options: [
+                    "Одинокая работа",
+                    "Игнорирование проблем",
+                    "Систематическое обучение"
+                ],
+                correct: 2
+            },
+            {
+                question: "Какое влияние оказывает негативный опыт на адаптацию?",
+                options: [
+                    "Увеличивает заинтересованность",
+                    "Способствует развитию",
+                    "Снижает уверенность в себе"
+                ],
+                correct: 2
+            },
+            {
+                question: "Какой из аспектов важен для культурной адаптации?",
+                options: [
+                    "Знание норм и традиций компании",
+                    "Технические навыки",
+                    "Физическая форма"
+                ],
+                correct: 0
+            },
+            {
+                question: "Какой из факторов может помочь в успешной адаптации?",
+                options: [
+                    "Отсутствие обратной связи",
+                    "Непостоянные графики",
+                    "Четкие ожидания от работы"
+                ],
+                correct: 2
+            },
+            {
+                question: "Какой из следующих методов неэффективен для адаптации?",
+                options: [
+                    "Проведение тренингов",
+                    "Игнорирование новых сотрудников",
+                    "Создание менторских пар"
+                ],
+                correct: 1
+            },
+            {
+                question: "Какой из аспектов наиболее важен для эмоциональной адаптации?",
+                options: [
+                    "Индивидуальные достижения",
+                    "Работа в команде",
+                    "Нормы поведения"
+                ],
+                correct: 1
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            const questionElement = document.getElementById("question");
+            const optionsContainer = document.getElementById("options");
+            const current = questions[currentQuestion];
+
+            questionElement.textContent = current.question;
+            optionsContainer.innerHTML = "";
+
+            current.options.forEach((option, index) => {
+                const btn = document.createElement("button");
+                btn.textContent = option;
+                btn.className = "btn";
+                btn.onclick = () => answer(index);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function answer(selected) {
+            if (selected === questions[currentQuestion].correct) {
+                score++;
+            }
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            const resultDiv = document.getElementById("result");
+            const homeBtn = document.getElementById("home-btn");
+            const card = document.getElementById("quiz-container");
+
+            card.style.display = "none";
+            resultDiv.style.display = "block";
+            homeBtn.style.display = "block";
+
+            if (score <= 5) {
+                resultDiv.textContent = `Низкий уровень знаний: ${score}/15. Рекомендуется углубить понимание процессов адаптации.`;
+            } else if (score <= 10) {
+                resultDiv.textContent = `Средний уровень знаний: ${score}/15. Вы обладаете базовыми знаниями, но есть куда расти.`;
+            } else {
+                resultDiv.textContent = `Высокий уровень знаний: ${score}/15. Вы отлично разбираетесь в проблемах адаптации!`;
+            }
+        }
+
+        function goHome() {
+            window.location.href = "index.html";
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>

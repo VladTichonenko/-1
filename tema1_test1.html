@@ -1,0 +1,178 @@
+
+<!DOCTYPE html> 
+<html lang="ru"> 
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>Тест: Делегирование полномочий</title> 
+    <style> 
+        body { 
+            margin: 0; 
+            font-family: Arial, sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            background-color: #f0f8ff; 
+            height: 100vh; 
+        } 
+        .card { 
+            width: 300px; 
+            background-color: white; 
+            border: 2px solid #1e90ff; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+            padding: 20px; 
+            text-align: center; 
+            margin-bottom: 20px; 
+        } 
+        .question { 
+            font-size: 18px; 
+            margin-bottom: 20px; 
+            color: #333; 
+        } 
+        .btn { 
+            display: block; 
+            width: 100%; 
+            padding: 10px; 
+            margin: 5px 0; 
+            font-size: 16px; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+        } 
+        .btn.correct { 
+            background-color: #1e90ff; 
+            color: white; 
+        } 
+        .btn.incorrect { 
+            background-color: #ff6347; 
+            color: white; 
+        } 
+        .result { 
+            font-size: 18px; 
+            color: #333; 
+            text-align: center; 
+            display: none; 
+        } 
+        .btn-home { 
+            margin-top: 20px; 
+            padding: 10px 20px; 
+            background-color: #1e90ff; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            font-size: 16px; 
+            cursor: pointer; 
+        } 
+    </style> 
+</head> 
+<body> 
+    <div class="card"> 
+        <div class="question" id="question">Загрузка...</div> 
+        <button class="btn" onclick="answer(false)">Да, часто</button> 
+        <button class="btn" onclick="answer(false)">Иногда</button> 
+        <button class="btn" onclick="answer(true)">Нет, никогда</button> 
+    </div> 
+    <div class="result" id="result"></div> 
+    <button class="btn-home" id="home-btn" style="display: none;" onclick="goHome()">На главную</button> 
+ 
+    <script> 
+        const questions = [ 
+            "Работаете ли вы после официального окончания рабочего дня?", 
+            "Остаетесь ли на работе дольше, чем ваши сотрудники?", 
+            "Часто ли выполняете работу за других и ту, с которой они вполне могли бы справиться сами?", 
+            "Удается ли в случае необходимости найти подчиненного или коллегу, который помог бы вам?", 
+            "Знают ли коллеги или подчиненные ваши задачи и сферу деятельности достаточно хорошо, чтобы заменить вас?", 
+            "Хватает ли вам времени на планирование работы?", 
+            "Бывает ли «завален» ваш письменный стол, когда вы возвращаетесь из командировки?", 
+            "Занимаетесь ли вы еще делами и проблемами из той сферы, за которую отвечали до последнего повышения по службе?", 
+            "Часто ли вы вынуждены откладывать важную задачу, чтобы выполнить другие?", 
+            "Часто ли приходится «поспешать», чтобы уложиться в срок?", 
+            "Расходуете ли вы время на рутинную работу, которую могут сделать другие?", 
+            "Сами ли вы пишете большую часть своих памятных записок, писем и отчетов?", 
+            "Часто ли к вам обращаются по поводу задач, не выполненных вашими подчиненными?", 
+            "Хватает ли вам времени на общественную и представительскую деятельность?", 
+            "Стремитесь ли вы к тому, чтобы всегда быть в курсе дел и иметь информацию обо всем?", 
+            "Стоит ли вам больших усилий придерживаться списка приоритетных дел?" 
+        ]; 
+        const correctAnswers = [ 
+            false, false, false, true, true, 
+            true, false, false, false, false, 
+            false, true, true, true, false, 
+            false, true 
+        ]; 
+        let
+
+currentQuestion = 0; 
+        let score = 0; 
+ 
+        function answer(isCorrect) { 
+            if (currentQuestion < questions.length) { 
+                if (isCorrect === correctAnswers[currentQuestion]) score++; 
+                currentQuestion++; 
+                if (currentQuestion < questions.length) { 
+                    document.getElementById("question").textContent = questions[currentQuestion]; 
+                    updateButtons(); 
+                } else { 
+                    showResult(); 
+                } 
+            } 
+        } 
+ 
+        function updateButtons() { 
+            const buttons = document.querySelectorAll('.btn'); 
+            buttons.forEach((btn, index) => { 
+                btn.textContent = getAnswerText(currentQuestion, index); 
+                btn.onclick = () => answer(index === 2); // 2 - "Нет, никогда" 
+            }); 
+        } 
+ 
+        function getAnswerText(questionIndex, btnIndex) { 
+            const answerOptions = [ 
+                ["Да, часто", "Иногда", "Нет, никогда"], 
+                ["Да, регулярно", "Иногда", "Нет, я стараюсь уходить в одно время с ними"], 
+                ["Да, очень часто", "Иногда", "Нет, я делегирую задачи"], 
+                ["Да, всегда", "Иногда", "Нет, обычно нет помощи"], 
+                ["Да, полностью", "Частично", "Нет, не знают"], 
+                ["Да, всегда хватает", "Иногда не хватает", "Нет, времени никогда не хватает"], 
+                ["Да, всегда", "Иногда", "Нет, всегда порядок"], 
+                ["Да, часто", "Иногда", "Нет, я сосредоточен на новых задачах"], 
+                ["Да, постоянно", "Иногда", "Нет, я стараюсь не откладывать"], 
+                ["Да, очень часто", "Иногда", "Нет, у меня достаточно времени"], 
+                ["Да, часто", "Иногда", "Нет, я делегирую рутинные задачи"], 
+                ["Да, всегда", "Иногда использую помощников", "Нет, делегирую это"], 
+                ["Да, очень часто", "Иногда", "Нет, редко"], 
+                ["Да, всегда хватает", "Иногда не хватает", "Нет, времени нет"], 
+                ["Да, это важно для меня", "Иногда", "Нет, это не обязательно"], 
+                ["Да, это сложно", "Иногда", "Нет, мне это дается легко"] 
+            ]; 
+            return answerOptions[questionIndex][btnIndex]; 
+        } 
+ 
+        function showResult() { 
+            const resultDiv = document.getElementById("result"); 
+            const homeBtn = document.getElementById("home-btn"); 
+            const card = document.querySelector(".card"); 
+            card.style.display = "none"; 
+            resultDiv.style.display = "block"; 
+            homeBtn.style.display = "block"; 
+ 
+            if (score < 4) { 
+                resultDiv.textContent = "Меньше 4 баллов:\nВы отлично делегируете полномочия. Это означает, что вы умеете доверять своим коллегам и эффективно распределять задачи."; 
+            } else if (score >= 4 && score <= 7) { 
+                resultDiv.textContent = "От 4 до 7 баллов:\nВы неплохо делегируете полномочия, но у вас есть резервы для улучшения. Возможно, вы иногда берете на себя слишком много задач."; 
+            } else { 
+                resultDiv.textContent = "Больше 7 баллов:\nДелегирование является для вас серьезной проблемой. Это может быть связано с боязнью потерять контроль или недостатком доверия к команде."; 
+            } 
+        } 
+ 
+        function goHome() { 
+            window.location.href = "index.html"; 
+        } 
+ 
+        document.getElementById("question").textContent = questions[currentQuestion]; 
+        updateButtons(); 
+    </script> 
+</body> 
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест: Практические аспекты управления проблемными сотрудниками</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f8ff;
+            height: 100vh;
+        }
+        .card {
+            width: 300px;
+            background-color: white;
+            border: 2px solid #1e90ff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .btn {
+            display: inline-block;
+            width: 100px;
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn.yes {
+            background-color: #1e90ff;
+            color: white;
+        }
+        .btn.no {
+            background-color: #ff6347;
+            color: white;
+        }
+        .result {
+            font-size: 18px;
+            color: #333;
+            text-align: center;
+        }
+        .btn-home {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #1e90ff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="question" id="question">Загрузка...</div>
+        <button class="btn yes" onclick="answer(true)">Да</button>
+        <button class="btn no" onclick="answer(false)">Нет</button>
+    </div>
+    <div class="result" id="result" style="display: none;">
+        Результат теста
+    </div>
+    <button class="btn-home" id="home-btn" style="display: none;" onclick="goHome()">На главную</button>
+
+    <script>
+        const questions = [
+            "Руководитель должен избегать конфронтации с проблемными сотрудниками?",
+            "Понимание причин проблемного поведения помогает найти решение?",
+            "Сотрудник может измениться, если его поддерживать?",
+            "Важно установить доверительные отношения с сотрудниками?",
+            "Необходимо проявлять жесткость в отношении нарушителей?",
+            "Эффективная коммуникация может решить большинство проблем?",
+            "Следует проводить индивидуальные беседы по поводу поведения?",
+            "Проблемные сотрудники могут быть ценными членами команды?",
+            "Отказ от общения с проблемным сотрудником — правильное решение?",
+            "Важно вовлекать HR в процесс управления проблемными сотрудниками?",
+            "Сотрудник регулярно опаздывает на работу. Следует ли провести индивидуальную беседу?",
+            "Сотрудник выражает недовольство в команде. Нужно ли игнорировать это поведение?",
+            "Сотрудник не выполняет свои обязанности. Нужно ли учитывать личные проблемы?",
+            "Если проблема не решается после предупреждений, стоит ли сразу принимать меры?",
+            "Агрессивное поведение сотрудника требует индивидуальной беседы?"
+        ];
+        const correctAnswers = [
+            false, true, true, true, false,
+            true, true, true, false, true,
+            true, false, true, false, true
+        ];
+        const lowMessage = "Низкий уровень: Ваши знания о практических аспектах управления проблемными сотрудниками находятся на низком уровне.\nВы не понимаете, как применять теорию в реальных ситуациях. Рекомендуется изучить основные принципы.";
+        const mediumMessage = "Средний уровень: Вы обладаете базовыми знаниями, но есть пробелы. Углубите свои знания и анализируйте реальные кейсы.";
+        const highMessage = "Высокий уровень: Вы демонстрируете хорошие знания и способны применять их на практике. Продолжайте развивать свои навыки.";
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function answer(isYes) {
+            if (currentQuestion < questions.length) {
+                if (isYes === correctAnswers[currentQuestion]) score++;
+                currentQuestion++;
+                if (currentQuestion < questions.length) {
+                    document.getElementById("question").textContent = questions[currentQuestion];
+                } else {
+                    showResult();
+                }
+            }
+        }
+
+        function showResult() {
+            const resultDiv = document.getElementById("result");
+            const homeBtn = document.getElementById("home-btn");
+            const card = document.querySelector(".card");
+            card.style.display = "none";
+            resultDiv.style.display = "block";
+            homeBtn.style.display = "block";
+
+            const total = questions.length;
+            const percentage = (score / total) * 100;
+
+            if (percentage < 50) {
+                resultDiv.textContent = lowMessage;
+            } else if (percentage < 80) {
+                resultDiv.textContent = mediumMessage;
+            } else {
+                resultDiv.textContent = highMessage;
+            }
+        }
+
+        function goHome() {
+            window.location.href = "index.html";
+        }
+
+        document.getElementById("question").textContent = questions[currentQuestion];
+    </script>
+</body>
+</html>

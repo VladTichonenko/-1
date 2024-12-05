@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест: Управление проблемными сотрудниками</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef6f8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .card {
+            background-color: #fff;
+            border: 2px solid #00bcd4;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            width: 350px;
+            text-align: center;
+        }
+        .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn.yes {
+            background-color: #00bcd4;
+            color: white;
+        }
+        .btn.no {
+            background-color: #f44336;
+            color: white;
+        }
+        .btn-start {
+            background-color: #4caf50;
+            color: white;
+        }
+        .result {
+            display: none;
+            text-align: center;
+        }
+        .btn-home {
+            margin-top: 20px;
+            background-color: #00bcd4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="start-screen">
+        <div class="card">
+            <h2>Выберите тест:</h2>
+            <button class="btn btn-start" onclick="startTest(1)">Основы управления</button>
+            <button class="btn btn-start" onclick="startTest(2)">Методы управления</button>
+        </div>
+    </div>
+
+    <div id="test-screen" class="card" style="display: none;">
+        <div id="question"></div>
+        <button class="btn yes" onclick="answer(true)">Да</button>
+        <button class="btn no" onclick="answer(false)">Нет</button>
+    </div>
+
+    <div id="result-screen" class="card result">
+        <div id="result"></div>
+        <button class="btn-home" onclick="location.reload()">На главную</button>
+    </div>
+
+    <script>
+        const tests = [
+            {
+                name: "Основы управления проблемными сотрудниками",
+                questions: [
+                    "Проблемные сотрудники могут негативно влиять на команду?",
+                    "Игнорирование проблемного поведения может быть эффективной стратегией?",
+                    "Обратная связь должна быть конструктивной и конкретной?",
+                    "Все проблемы с сотрудниками следует решать индивидуально?",
+                    "Установление четких ожиданий помогает предотвратить проблемы?",
+                    "Регулярные встречи с сотрудниками могут снизить риск проблем?",
+                    "Сотрудник всегда осознает, что его поведение является проблемным?",
+                    "Необходимо учитывать личные обстоятельства сотрудника при оценке его поведения?",
+                    "Дисциплинарные меры всегда должны применяться сразу?",
+                    "Эмоциональный интеллект важен для управления проблемными сотрудниками?",
+                    "Открытое общение помогает в решении конфликтов?",
+                    "Все проблемы сотрудников следует обсуждать в команде?",
+                    "Успех в управлении проблемными сотрудниками зависит от стиля руководства?",
+                    "Причины проблемного поведения всегда очевидны?",
+                    "Поддержка со стороны HR может быть полезной в сложных ситуациях?"
+                ],
+                answers: [true, false, true, true, true, true, false, true, false, true, true, false, true, false, true]
+            },
+            {
+                name: "Методы управления проблемными сотрудниками",
+                questions: [
+                    "Психологические тесты могут помочь выявить проблемы у сотрудников?",
+                    "Обучение и развитие могут помочь исправить поведение проблемного сотрудника?",
+                    "Устное предупреждение — это достаточная мера для решения всех проблем?",
+                    "Важно задать вопросы, чтобы понять причины проблемного поведения?",
+                    "Сложные ситуации всегда требуют вмешательства руководства?",
+                    "Командные мероприятия могут улучшить отношения между сотрудниками?",
+                    "Сотрудники не реагируют на изменения в политике компании?",
+                    "Оценка производительности должна включать обсуждение проблемного поведения?",
+                    "Повышение зарплаты может решить проблемы с мотивацией?",
+                    "Применение санкций может повысить дисциплину в команде?",
+                    "Важно учитывать мнение других сотрудников при решении проблем?",
+                    "Система поощрений может помочь предотвратить проблемы?",
+                    "Решение конфликта требует времени и терпения?",
+                    "Обратная связь должна быть регулярной и систематической?",
+                    "Важно документировать все случаи проблемного поведения?"
+                ],
+                answers: [true, true, false, true, false, true, false, true, false, true, true, true, true, true, true]
+            }
+        ];
+
+        let currentTest = null;
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function startTest(testIndex) {
+            currentTest = tests[testIndex - 1];
+            currentQuestionIndex = 0;
+            score = 0;
+
+            document.getElementById("start-screen").style.display = "none";
+            document.getElementById("test-screen").style.display = "block";
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            document.getElementById("question").textContent = currentTest.questions[currentQuestionIndex];
+        }
+
+        function answer(userAnswer) {
+            if (userAnswer === currentTest.answers[currentQuestionIndex]) score++;
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentTest.questions.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById("test-screen").style.display = "none";
+            document.getElementById("result-screen").style.display = "block";
+
+            const totalQuestions = currentTest.questions.length;
+            const percentage = (score / totalQuestions) * 100;
+            let resultText = "";
+
+            if (percentage < 50) {
+                resultText = "Низкий уровень: Ваши знания о " + currentTest.name.toLowerCase() + " находятся на низком уровне.\n" +
+                    "Рекомендуется изучить основные методы управления, включая коммуникацию, обратную связь и подходы к решению конфликтов.";
+            } else if (percentage < 80) {
+                resultText = "Средний уровень: Вы обладаете базовыми знаниями о " + currentTest.name.toLowerCase() + ", но есть пробелы в понимании их практического применения.\n" +
+                    "Рекомендуется углубить свои знания о различных подходах к решению проблем и о том, как эффективно взаимодействовать с командой.";
+            } else {
+                resultText = "Высокий уровень: Вы демонстрируете хорошие знания о " + currentTest.name.toLowerCase() + ".\n" +
+                    "Ваши навыки могут значительно улучшить атмосферу в коллективе и способствовать развитию сотрудников.";
+            }
+
+            document.getElementById("result").textContent = resultText;
+        }
+    </script>
+</body>
+</html>
